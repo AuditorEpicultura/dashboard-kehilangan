@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request CCTV — Dashboard Kehilangan Barang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── Core Blue Palette ── */
+  --bg:           #E3F2FD;
+  --surface:      #ffffff;
+  --surface2:     #EBF5FE;
+  --surface3:     #DDEEFB;
+  --border:       #BBDEFB;
+  --border2:      #90CAF9;
+
+  /* ── Text ── */
+  --text:         #0D47A1;
+  --text2:        #1565C0;
+  --text3:        #5B92C8;
+
+  /* ── Primary Actions ── */
+  --primary:      #1565C0;
+  --primary-light:#E3F2FD;
+  --primary-dark: #0D47A1;
+  --primary-xdark:#0A3880;
+
+  /* ── Semantic colours (kept for badges) ── */
+  --red:           #c62828;
+  --red-light:     #ffebee;
+  --red-border:    #ef9a9a;
+  --orange:        #e65100;
+  --orange-light:  #fff3e0;
+  --orange-border: #ffcc80;
+  --green:         #2e7d32;
+  --green-light:   #e8f5e9;
+  --green-border:  #a5d6a7;
+  --blue:          #1565C0;
+  --blue-light:    #E3F2FD;
+  --blue-border:   #90CAF9;
+  --purple:        #4527a0;
+  --purple-light:  #ede7f6;
+  --purple-border: #b39ddb;
+
+  --font:      'Poppins', sans-serif;
+  --font-mono: 'Poppins', sans-serif;
+  --radius:    8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* ── Blue-tinted Shadows ── */
+  --shadow-sm: 0 2px 8px rgba(21,101,192,.12), 0 1px 3px rgba(21,101,192,.08);
+  --shadow:    0 6px 20px rgba(21,101,192,.16), 0 2px 8px rgba(21,101,192,.10);
+  --shadow-lg: 0 16px 48px rgba(13,71,161,.20), 0 6px 16px rgba(21,101,192,.12);
+  --shadow-btn:0 3px 10px rgba(21,101,192,.35);
+  --shadow-card:0 4px 16px rgba(21,101,192,.13), 0 1px 4px rgba(21,101,192,.08);
+  --shadow-top: 0 -2px 12px rgba(21,101,192,.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+@keyframes fadeIn  { from{opacity:0;transform:translateY(6px)}  to{opacity:1;transform:translateY(0)} }
+@keyframes slideIn { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideOut{ to{opacity:0;transform:translateX(16px)} }
+@keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.35} }
+@keyframes spin    { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: #0D47A1;
+  border-bottom: none;
+  padding: 0 28px;
+  height: 62px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0; position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 4px 20px rgba(13,71,161,.40), 0 2px 6px rgba(13,71,161,.25);
+}
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800; font-size: 21px;
+  color: #ffffff;
+  display: flex; align-items: center; gap: 12px;
+  letter-spacing: -.01em;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.35);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+.logo-dot { width: 7px; height: 7px; background: #64B5F6; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.topbar-date {
+  font-size: 12px; color: rgba(255,255,255,.75);
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 99px; padding: 5px 14px;
+  font-family: var(--font-mono);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
+}
+
+/* ── NAV TABS ── */
+.nav-tabs {
+  background: #1565C0;
+  border-bottom: none;
+  padding: 0 28px;
+  display: flex; gap: 0; flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(21,101,192,.30);
+}
+.nav-tab {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,.65);
+  padding: 13px 18px; cursor: pointer;
+  border: none; background: transparent;
+  border-bottom: 3px solid transparent;
+  transition: all .18s;
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: rgba(255,255,255,.90); background: rgba(255,255,255,.08); }
+.nav-tab.active { color: #ffffff; border-bottom-color: #64B5F6; font-weight: 700; background: rgba(255,255,255,.1); }
+.nav-tab .badge {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  background: rgba(255,255,255,.18); color: rgba(255,255,255,.85);
+  padding: 2px 8px; border-radius: 99px; min-width: 22px; text-align: center;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+.nav-tab.active .badge { background: #64B5F6; color: #0D47A1; }
+
+/* ── MAIN ── */
+.main { flex: 1; padding: 28px; overflow-y: auto; }
+.page { display: none; }
+.page.active { display: block; animation: fadeIn .22s ease; }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  padding: 9px 18px; border-radius: var(--radius); border: none;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+  transition: all .16s; white-space: nowrap; line-height: 1;
+}
+.btn-primary {
+  background: #1565C0; color: #fff;
+  box-shadow: var(--shadow-btn);
+}
+.btn-primary:hover { background: #0D47A1; box-shadow: 0 5px 16px rgba(13,71,161,.45); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  background: var(--surface); color: var(--text2);
+  border: 1.5px solid var(--border2);
+  box-shadow: var(--shadow-sm);
+}
+.btn-ghost:hover { background: var(--surface2); border-color: var(--primary); color: var(--primary-dark); box-shadow: var(--shadow); }
+
+.btn-danger {
+  background: var(--red-light); color: var(--red);
+  border: 1.5px solid var(--red-border);
+  box-shadow: 0 2px 8px rgba(198,40,40,.14);
+}
+.btn-danger:hover { background: #ffcdd2; box-shadow: 0 4px 12px rgba(198,40,40,.22); }
+
+.btn-success {
+  background: var(--green-light); color: var(--green);
+  border: 1.5px solid var(--green-border);
+  box-shadow: 0 2px 8px rgba(46,125,50,.14);
+}
+.btn-success:hover { background: #c8e6c9; box-shadow: 0 4px 12px rgba(46,125,50,.22); }
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-icon {
+  width: 34px; height: 34px; padding: 0; justify-content: center;
+  border-radius: var(--radius);
+  background: var(--surface); color: var(--text2);
+  border: 1.5px solid var(--border2);
+  cursor: pointer; display: inline-flex; align-items: center;
+  transition: all .16s;
+  box-shadow: var(--shadow-sm);
+}
+.btn-icon:hover { background: var(--primary-light); color: var(--primary); border-color: var(--border2); box-shadow: var(--shadow); transform: translateY(-1px); }
+
+/* ── METRICS ── */
+.metrics-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
+.metric-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 20px; position: relative; overflow: hidden;
+  transition: all .22s;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+.metric-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, #1565C0, #42A5F5);
+}
+.metric-card.mc-high::before  { background: linear-gradient(90deg,#c62828,#ef9a9a); }
+.metric-card.mc-med::before   { background: linear-gradient(90deg,#e65100,#ffcc80); }
+.metric-card.mc-low::before   { background: linear-gradient(90deg,#2e7d32,#a5d6a7); }
+.metric-card.mc-done::before  { background: linear-gradient(90deg,#0D47A1,#64B5F6); }
+.metric-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); border-color: var(--border2); }
+.metric-icon {
+  width: 42px; height: 42px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+  box-shadow: 0 3px 10px rgba(21,101,192,.18);
+}
+.mc-total .metric-icon { background: linear-gradient(135deg,#E3F2FD,#BBDEFB); color: #1565C0; }
+.mc-high  .metric-icon { background: linear-gradient(135deg,#ffebee,#ffcdd2); color: #c62828; box-shadow: 0 3px 10px rgba(198,40,40,.18); }
+.mc-med   .metric-icon { background: linear-gradient(135deg,#fff3e0,#ffe0b2); color: #e65100; box-shadow: 0 3px 10px rgba(230,81,0,.18); }
+.mc-low   .metric-icon { background: linear-gradient(135deg,#e8f5e9,#c8e6c9); color: #2e7d32; box-shadow: 0 3px 10px rgba(46,125,50,.18); }
+.mc-done  .metric-icon { background: linear-gradient(135deg,#E3F2FD,#90CAF9); color: #0D47A1; }
+.metric-label { font-size: 12px; color: var(--text3); font-weight: 500; margin-bottom: 4px; }
+.metric-value { font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: -.03em; }
+.metric-sub { font-size: 11px; color: var(--text3); margin-top: 6px; }
+.mv-total { color: #1565C0; }
+.mv-high  { color: #c62828; }
+.mv-med   { color: #e65100; }
+.mv-low   { color: #2e7d32; }
+.mv-done  { color: #0D47A1; }
+
+/* ── SECTION HEADER ── */
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; flex-wrap:wrap; }
+.section-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); letter-spacing: -.02em; }
+.filter-bar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.filter-pill {
+  font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 99px;
+  border: 1.5px solid var(--border2); background: var(--surface); color: var(--text3);
+  cursor: pointer; transition: all .16s;
+  box-shadow: var(--shadow-sm);
+}
+.filter-pill:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); box-shadow: var(--shadow); }
+.filter-pill.active { background: #1565C0; color: #fff; border-color: #1565C0; box-shadow: 0 3px 10px rgba(21,101,192,.35); }
+.search-box {
+  background: var(--surface); border: 1.5px solid var(--border2);
+  border-radius: var(--radius); padding: 8px 12px 8px 34px;
+  font-size: 13px; color: var(--text); font-family: var(--font); width: 220px;
+  transition: border-color .15s, box-shadow .15s;
+  box-shadow: var(--shadow-sm);
+}
+.search-wrap { position: relative; display: inline-flex; align-items: center; }
+.search-wrap svg { position: absolute; left: 10px; color: var(--text3); pointer-events: none; flex-shrink:0; }
+.search-box::placeholder { color: var(--text3); }
+.search-box:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(21,101,192,.15), var(--shadow); }
+
+/* ── STAT PANELS ── */
+.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
+.stat-panel {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+}
+.stat-panel-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 12px; }
+.bar-track { height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; margin-top: 5px; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width .6s ease; background: linear-gradient(90deg,#1565C0,#42A5F5); }
+
+/* ── TABLE ── */
+.table-wrap {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+table { width: 100%; border-collapse: collapse; }
+thead { background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); }
+th {
+  padding: 13px 16px; text-align: left;
+  font-size: 11px; font-weight: 700; color: #1565C0;
+  text-transform: uppercase; letter-spacing: .07em;
+  border-bottom: 2px solid var(--border2); white-space: nowrap;
+}
+td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 13px; color: var(--text); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #EBF5FE; }
+.id-badge {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  color: var(--text2); background: var(--primary-light);
+  border: 1px solid var(--border2); padding: 3px 8px; border-radius: 5px;
+  box-shadow: var(--shadow-sm);
+}
+.outlet-tag { font-size: 12px; font-weight: 700; color: #1565C0; }
+
+/* ── PRIORITY / STATUS BADGES ── */
+.priority { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600; padding:4px 10px; border-radius:99px; box-shadow: 0 1px 4px rgba(0,0,0,.10); }
+.p-high { background:var(--red-light);   color:var(--red);    border:1px solid var(--red-border); }
+.p-med  { background:var(--orange-light);color:var(--orange); border:1px solid var(--orange-border); }
+.p-low  { background:var(--green-light); color:var(--green);  border:1px solid var(--green-border); }
+.p-dot { width:5px; height:5px; border-radius:50%; }
+.p-high .p-dot { background:var(--red); }
+.p-med  .p-dot { background:var(--orange); }
+.p-low  .p-dot { background:var(--green); }
+
+.status { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600; padding:4px 10px; border-radius:99px; box-shadow: 0 1px 4px rgba(0,0,0,.10); }
+.s-open   { background:var(--blue-light);  color:#1565C0;     border:1px solid var(--blue-border); }
+.s-done   { background:var(--green-light); color:var(--green); border:1px solid var(--green-border); }
+.s-reject { background:#f5f5f5; color:#9e9e9e; border:1px solid #e0e0e0; }
+
+.loss-tag {
+  font-size:12px; font-weight:600; padding:3px 10px; border-radius:6px;
+  background: var(--purple-light); color:var(--purple); border:1px solid var(--purple-border);
+  box-shadow: 0 1px 4px rgba(69,39,160,.10);
+}
+.loss-tag.type-kerusakan { background:#fff3e0; color:#e65100; border-color:#ffcc80; box-shadow:0 1px 4px rgba(230,81,0,.10); }
+.loss-tag.type-special-member { background:#e8f5e9; color:#2e7d32; border-color:#a5d6a7; box-shadow:0 1px 4px rgba(46,125,50,.10); }
+.loss-tag.type-special-staff { background:#e3f2fd; color:#1565C0; border-color:#90CAF9; box-shadow:0 1px 4px rgba(21,101,192,.10); }
+
+/* ── ACTIONS ── */
+.actions { display:flex; gap:6px; align-items:center; }
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align:center; padding:60px 24px; color:var(--text3); }
+.empty-state svg { margin-bottom:14px; opacity:.25; }
+.empty-title { font-size:16px; font-weight:600; color:var(--text2); margin-bottom:6px; }
+
+/* ── MODAL ── */
+.overlay {
+  display:none; position:fixed; inset:0;
+  background: rgba(13,71,161,.40); backdrop-filter:blur(5px);
+  z-index:200; align-items:center; justify-content:center; padding:20px;
+}
+.overlay.open { display:flex; animation:fadeIn .18s ease; }
+.modal {
+  background: var(--surface); border-radius: var(--radius-xl);
+  width:540px; max-width:100%; max-height:90vh; overflow-y:auto;
+  box-shadow: var(--shadow-lg); border:1.5px solid var(--border);
+}
+.modal-header {
+  padding:22px 26px 16px; border-bottom:2px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  background: linear-gradient(135deg,#E3F2FD,#ffffff);
+}
+.modal-title { font-size:17px; font-weight:700; color:var(--primary-dark); letter-spacing:-.02em; }
+.modal-body { padding:22px 26px; }
+.modal-footer {
+  padding:16px 26px; border-top:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:flex-end; gap:10px;
+  background: linear-gradient(135deg,#EBF5FE,#f8fbff);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+/* ── FORM ── */
+.form-group { margin-bottom:18px; }
+.form-label { display:block; font-size:12px; font-weight:700; color:var(--primary-dark); margin-bottom:7px; letter-spacing:.01em; }
+.form-input, .form-select, .form-textarea {
+  width:100%; background:var(--surface); border:1.5px solid var(--border2);
+  border-radius:var(--radius); padding:10px 13px; font-size:13px; color:var(--text);
+  font-family:var(--font); transition:border-color .15s, box-shadow .15s;
+  box-shadow: var(--shadow-sm);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline:none; border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(21,101,192,.12), var(--shadow);
+}
+.form-textarea { resize:vertical; min-height:80px; }
+.form-select option { background:var(--surface); color:var(--text); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.required { color:var(--red); margin-left:2px; }
+.form-hint { font-size:11px; color:var(--text3); margin-top:5px; }
+.modal-banner {
+  border-radius:var(--radius); padding:12px 16px; margin-bottom:20px;
+  font-size:13px; display:flex; align-items:center; gap:10px; font-weight:500;
+  box-shadow: var(--shadow-sm);
+}
+.banner-loss    { background:var(--primary-light); color:#1565C0; border:1px solid var(--border2); }
+.banner-suspect { background:var(--red-light);     color:var(--red); border:1px solid var(--red-border); }
+
+/* ── HISTORY ── */
+.history-item {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--radius-lg); padding:18px 20px; margin-bottom:10px;
+  display:flex; align-items:flex-start; gap:16px;
+  transition:all .2s; box-shadow:var(--shadow-card);
+}
+.history-item:hover { box-shadow:var(--shadow); border-color:var(--border2); transform:translateY(-2px); }
+.history-icon {
+  width:42px; height:42px; border-radius:var(--radius);
+  background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
+  border:1.5px solid var(--green-border);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; color:var(--green);
+  box-shadow: 0 3px 8px rgba(46,125,50,.18);
+}
+.history-info { flex:1; min-width:0; }
+.history-title { font-weight:600; font-size:14px; margin-bottom:5px; color:var(--text); }
+.history-meta { font-size:12px; color:var(--text3); display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.history-meta span { display:flex; align-items:center; gap:4px; }
+.history-badge { margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+
+/* ── SUSPECT ── */
+.suspect-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px; }
+.suspect-card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--radius-xl); padding:20px;
+  transition:all .22s; box-shadow:var(--shadow-card); position:relative; overflow:hidden;
+}
+.suspect-card::after { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#c62828,#ef9a9a); }
+.suspect-card:hover { box-shadow:var(--shadow); transform:translateY(-3px); border-color:var(--red-border); }
+.suspect-avatar {
+  width:48px; height:48px; border-radius:14px;
+  background:linear-gradient(135deg,#ffebee,#ffcdd2);
+  border:1.5px solid var(--red-border);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:17px; color:var(--red); margin-bottom:14px;
+  box-shadow: 0 4px 12px rgba(198,40,40,.20);
+}
+.suspect-name   { font-weight:700; font-size:15px; margin-bottom:3px; color:var(--text); }
+.suspect-outlet { font-size:12px; font-weight:700; color:#1565C0; margin-bottom:12px; }
+.suspect-detail { display:flex; flex-direction:column; gap:6px; }
+.suspect-row { display:flex; justify-content:space-between; align-items:center; font-size:12px; }
+.suspect-key { color:var(--text3); font-weight:500; }
+.suspect-val { color:var(--text2); font-weight:500; }
+.suspect-actions { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); display:flex; gap:8px; }
+
+/* ── TOAST ── */
+.toast-wrap { position:fixed; bottom:24px; right:24px; z-index:999; display:flex; flex-direction:column; gap:10px; }
+.toast {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--radius-lg); padding:14px 18px;
+  font-size:13px; font-weight:500; color:var(--text);
+  display:flex; align-items:center; gap:12px; min-width:260px;
+  animation:slideIn .25s ease;
+  box-shadow: var(--shadow-lg);
+}
+.toast.t-success { border-left:4px solid var(--green); }
+.toast.t-error   { border-left:4px solid var(--red); }
+.toast.t-info    { border-left:4px solid #1565C0; }
+
+/* ── DETAIL MODAL ── */
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+.detail-field {
+  background:var(--primary-light); border-radius:var(--radius);
+  padding:12px 14px; border:1px solid var(--border2);
+  box-shadow: var(--shadow-sm);
+}
+.detail-field-label { font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; }
+.detail-field-value { font-size:13px; font-weight:500; color:var(--text); }
+.detail-field.full { grid-column:1/-1; }
+.detail-timeline { margin-top:4px; }
+.tl-item { display:flex; gap:14px; align-items:flex-start; padding-bottom:14px; }
+.tl-dot { width:10px; height:10px; border-radius:50%; background:var(--border2); margin-top:3px; flex-shrink:0; border:2px solid var(--border); }
+.tl-dot.active { background:#1565C0; border-color:var(--primary-light); box-shadow:0 0 0 4px rgba(21,101,192,.18); }
+.tl-line { width:2px; background:var(--border); flex-shrink:0; align-self:stretch; margin-left:4px; }
+.tl-content { font-size:13px; }
+.tl-event { color:var(--text); font-weight:600; }
+.tl-time { color:var(--text3); font-family:var(--font-mono); font-size:11px; margin-top:2px; }
+
+/* ── EXPORT DROPDOWN ── */
+.export-wrap { position:relative; display:inline-block; }
+.export-menu {
+  display:none; position:absolute; right:0; top:calc(100% + 8px);
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--radius-lg); min-width:175px; z-index:99;
+  overflow:hidden; box-shadow:var(--shadow-lg);
+}
+.export-menu.open { display:block; animation:fadeIn .12s ease; }
+.export-item {
+  display:flex; align-items:center; gap:10px; padding:10px 16px;
+  font-size:13px; font-weight:500; color:var(--text2);
+  cursor:pointer; border:none; background:transparent;
+  width:100%; text-align:left; font-family:var(--font); transition:background .1s;
+}
+.export-item:hover { background:var(--primary-light); color:#1565C0; }
+.export-item .ext-badge { font-family:var(--font-mono); font-size:10px; font-weight:600; padding:2px 7px; border-radius:4px; margin-left:auto; }
+.ext-xlsx { background:var(--green-light); color:var(--green); border:1px solid var(--green-border); }
+.ext-pdf  { background:var(--red-light);   color:var(--red);   border:1px solid var(--red-border); }
+.export-divider { height:1px; background:var(--border); margin:4px 0; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:#1565C0; }
+
+/* ── COMMENTS ── */
+.comment-section { margin-top:18px; border-top:1.5px solid var(--border); padding-top:16px; }
+.comment-section-title { font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px; }
+.comment-list { display:flex;flex-direction:column;gap:10px;max-height:220px;overflow-y:auto;margin-bottom:12px; }
+.comment-item { background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 13px; }
+.comment-item.comment-self { background:var(--primary-light);border-color:var(--border2); }
+.comment-meta { display:flex;align-items:center;gap:8px;margin-bottom:4px; }
+.comment-author { font-size:12px;font-weight:700;color:var(--primary-dark); }
+.comment-time { font-size:11px;color:var(--text3); }
+.comment-text { font-size:13px;color:var(--text);line-height:1.55; }
+.comment-input-wrap { display:flex;gap:8px;align-items:flex-end; }
+.comment-input-wrap textarea { flex:1;border:1.5px solid var(--border2);border-radius:var(--radius);padding:9px 12px;font-size:13px;font-family:var(--font);color:var(--text);background:var(--surface);resize:none;min-height:42px;max-height:100px;transition:border-color .15s,box-shadow .15s;line-height:1.5; }
+.comment-input-wrap textarea:focus { outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(21,101,192,.1); }
+.comment-input-wrap textarea::placeholder { color:var(--text3); }
+.comment-send-btn { width:38px;height:38px;flex-shrink:0;background:#1565C0;border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-btn); }
+.comment-send-btn:hover { background:#0D47A1;transform:translateY(-1px); }
+.comment-send-btn:active { transform:translateY(0); }
+.comment-empty { text-align:center;padding:16px;font-size:12px;color:var(--text3); }
+@media print {
+  .topbar,.nav-tabs,.btn,.actions,.btn-icon,.export-wrap,.filter-bar,.search-wrap,.filter-pill{display:none!important;}
+  body{background:#fff!important;color:#000!important;}
+  .main{padding:0!important;}
+  .page{display:block!important;}
+  table{border-collapse:collapse;width:100%;}
+  th,td{border:1px solid #ddd!important;padding:8px!important;font-size:12px!important;color:#000!important;background:#fff!important;}
+  thead{background:#f5f5f5!important;}
+  .table-wrap{border:none!important;border-radius:0!important;box-shadow:none!important;}
+}
+@media(max-width:900px){.metrics-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:640px){.metrics-grid{grid-template-columns:repeat(2,1fr);}.main{padding:16px;}.form-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    Request CCTV
+    <div class="logo-dot"></div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-date" id="topbar-date"></span>
+    <button class="btn btn-ghost btn-sm" id="sync-btn" onclick="syncFromGForm()" title="Sinkronisasi dari Google Form" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.85);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:7px;padding:6px 14px;cursor:pointer;transition:all .15s;">
+      <svg id="sync-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+      Sync GForm
+    </button>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="switchPage('dashboard',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+    Dashboard
+  </button>
+  <button class="nav-tab" onclick="switchPage('requests',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Semua Request
+    <span class="badge" id="badge-open">0</span>
+  </button>
+  <button class="nav-tab" onclick="switchPage('history',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    History
+    <span class="badge" id="badge-done">0</span>
+  </button>
+  <button class="nav-tab" onclick="switchPage('suspects',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Data Suspect
+    <span class="badge" id="badge-suspect">0</span>
+  </button>
+  <button class="nav-tab" onclick="switchPage('outlets',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Kelola Outlet
+    <span class="badge" id="badge-outlet">0</span>
+  </button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- DASHBOARD PAGE -->
+  <div class="page active" id="page-dashboard">
+    <div class="metrics-grid" id="metrics"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;">
+      <div class="stat-panel">
+        <div class="stat-panel-label">Jenis request terbanyak</div>
+        <div id="top-loss-list"></div>
+      </div>
+      <div class="stat-panel">
+        <div class="stat-panel-label">Outlet aktif</div>
+        <div id="top-outlet-list"></div>
+      </div>
+      <div class="stat-panel">
+        <div class="stat-panel-label">Suspect tercatat</div>
+        <div id="suspect-summary"></div>
+      </div>
+    </div>
+    <div class="section-header">
+      <div>
+        <div class="section-title">Request Terbaru</div>
+        <div id="sync-status-bar" style="display:none;margin-top:4px;font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="sync-status-text">Belum tersinkronisasi</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-ghost btn-sm" onclick="openGFormConfig()" title="Pengaturan Google Form">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2m0 18v-2m8.07-5.07l-1.41-1.41M4.34 17.66l1.41-1.41M22 12h-2M4 12H2"/></svg>
+          Pengaturan Sync
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="openLossModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Request Baru
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>ID</th><th>Outlet</th><th>Jenis Request</th><th>Prioritas</th><th>Nama & ID Member</th><th>Tanggal</th><th>Aksi</th>
+        </tr></thead>
+        <tbody id="dash-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ALL REQUESTS PAGE -->
+  <div class="page" id="page-requests">
+    <div class="section-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="section-title">Request Aktif</div>
+        <span id="active-count-badge" style="font-size:12px;font-weight:600;background:#1565C0;color:#fff;padding:3px 11px;border-radius:99px;box-shadow:0 2px 6px rgba(21,101,192,.3);">0</span>
+      </div>
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-box" id="req-search" type="text" placeholder="Cari outlet, pelapor..." oninput="renderRequests()">
+        </div>
+        <button class="filter-pill active" onclick="setReqFilter('semua',this)">Semua</button>
+        <button class="filter-pill" onclick="setReqFilter('Tinggi',this)">Tinggi</button>
+        <button class="filter-pill" onclick="setReqFilter('Sedang',this)">Sedang</button>
+        <button class="filter-pill" onclick="setReqFilter('Rendah',this)">Rendah</button>
+        <button class="btn btn-primary btn-sm" onclick="openLossModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Request Baru
+        </button>
+        <div class="export-wrap">
+          <button class="btn btn-ghost btn-sm" onclick="toggleExport('exp-requests')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+          <div class="export-menu" id="exp-requests">
+            <button class="export-item" onclick="exportExcel('requests')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Export Excel
+              <span class="ext-badge ext-xlsx">.xlsx</span>
+            </button>
+            <div class="export-divider"></div>
+            <button class="export-item" onclick="exportPDF('requests')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Export PDF
+              <span class="ext-badge ext-pdf">.pdf</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>ID</th><th>Outlet</th><th>Jenis Request</th><th>Prioritas</th><th>Nama & ID Member</th><th>Tanggal</th><th>Waktu Kejadian</th><th>Aksi</th>
+        </tr></thead>
+        <tbody id="req-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- HISTORY PAGE -->
+  <div class="page" id="page-history">
+    <div class="section-header">
+      <div class="section-title">History Request</div>
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-box" id="hist-search" type="text" placeholder="Cari..." oninput="renderHistory()">
+        </div>
+        <button class="filter-pill active" onclick="setHistFilter('semua',this)">Semua</button>
+        <button class="filter-pill" onclick="setHistFilter('Selesai',this)">Selesai</button>
+        <button class="filter-pill" onclick="setHistFilter('Ditolak',this)">Ditolak</button>
+        <div class="export-wrap">
+          <button class="btn btn-ghost btn-sm" onclick="toggleExport('exp-history')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+          <div class="export-menu" id="exp-history">
+            <button class="export-item" onclick="exportExcel('history')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Export Excel
+              <span class="ext-badge ext-xlsx">.xlsx</span>
+            </button>
+            <div class="export-divider"></div>
+            <button class="export-item" onclick="exportPDF('history')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Export PDF
+              <span class="ext-badge ext-pdf">.pdf</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- SUSPECTS PAGE -->
+  <div class="page" id="page-suspects">
+    <div class="section-header">
+      <div class="section-title">Data Suspect</div>
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-box" id="sus-search" type="text" placeholder="Cari nama, outlet..." oninput="renderSuspects()">
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="openSuspectModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Tambah Suspect
+        </button>
+        <div class="export-wrap">
+          <button class="btn btn-ghost btn-sm" onclick="toggleExport('exp-suspects')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+          <div class="export-menu" id="exp-suspects">
+            <button class="export-item" onclick="exportExcel('suspects')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Export Excel
+              <span class="ext-badge ext-xlsx">.xlsx</span>
+            </button>
+            <div class="export-divider"></div>
+            <button class="export-item" onclick="exportPDF('suspects')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Export PDF
+              <span class="ext-badge ext-pdf">.pdf</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>No</th><th>Nama Suspect</th><th>Outlet</th><th>Jenis Request</th><th>Status</th><th>Tercatat</th><th>Aksi</th>
+        </tr></thead>
+        <tbody id="suspect-grid"></tbody>
+      </table>
+    </div>
+    <div id="suspect-empty" style="display:none;">
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <div class="empty-title">Belum ada data suspect</div>
+        <div style="font-size:13px;color:var(--text3);">Tambahkan suspect baru dengan tombol di atas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTLETS PAGE -->
+  <div class="page" id="page-outlets">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Kelola Outlet</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:3px;font-family:var(--font-mono);">Outlet yang tersimpan akan muncul di semua dropdown</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openOutletModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Outlet
+      </button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:50px;">No</th>
+          <th>Nama Outlet</th>
+          <th>Jumlah Request</th>
+          <th>Ditambahkan</th>
+          <th>Aksi</th>
+        </tr></thead>
+        <tbody id="outlet-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TAMBAH REQUEST KEHILANGAN -->
+<div class="overlay" id="modal-loss">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Laporan Kehilangan Barang</div>
+      <button class="btn-icon" onclick="closeModal('modal-loss')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-banner banner-loss">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Isi data kehilangan barang. Laporan akan masuk antrian dengan prioritas yang dipilih.
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nama Outlet <span class="required">*</span></label>
+          <input class="form-input" id="f-outlet" type="text" placeholder="cth. FTL Cirendeu, Outlet Mall X...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jenis Request <span class="required">*</span></label>
+          <input class="form-input" id="f-loss-type" type="text" placeholder="cth. Kehilangan dompet, Kerusakan fasilitas, Special case...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama dan ID Member <span class="required">*</span></label>
+        <input class="form-input" id="f-reporter" type="text" placeholder="Nama lengkap & ID Member">
+      </div>
+      <input type="hidden" id="f-priority" value="Sedang">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tanggal Kejadian <span class="required">*</span></label>
+          <input class="form-input" id="f-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Perkiraan Waktu</label>
+          <input class="form-input" id="f-time" type="time">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kronologi Lengkap</label>
+        <textarea class="form-textarea" id="f-desc" placeholder="Ceritakan kronologi kejadian secara lengkap..." style="min-height:100px;"></textarea>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>Foto Pendukung</span>
+          <span style="font-size:10px;font-weight:500;color:var(--text3);background:var(--surface3);padding:2px 8px;border-radius:99px;border:1px solid var(--border);">Opsional</span>
+        </label>
+        <div id="photo-dropzone" onclick="document.getElementById('f-photos').click()" style="border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:20px 16px;text-align:center;cursor:pointer;background:var(--surface2);transition:all .18s;position:relative;">
+          <input type="file" id="f-photos" accept="image/*" multiple style="display:none;" onchange="handlePhotoSelect(this)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:3px;">Klik untuk memilih foto</div>
+          <div style="font-size:11px;color:var(--text3);">JPG, PNG, WEBP · Maks. 5 foto · Opsional</div>
+        </div>
+        <div id="photo-preview-wrap" style="display:none;margin-top:10px;">
+          <div id="photo-preview-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+          <button type="button" onclick="clearPhotos()" style="margin-top:8px;font-size:11px;font-weight:600;color:var(--red);background:var(--red-light);border:1px solid var(--red-border);border-radius:6px;padding:4px 12px;cursor:pointer;">
+            Hapus semua foto
+          </button>
+        </div>
+      </div>
+      <input type="hidden" id="f-location" value="">
+      <input type="hidden" id="f-suspect-link" value="">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-loss')">Batal</button>
+      <button class="btn btn-primary" onclick="submitLoss()">Kirim Laporan</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TAMBAH SUSPECT -->
+<div class="overlay" id="modal-suspect">
+  <div class="modal" style="width:480px;">
+    <div class="modal-header">
+      <div class="modal-title">Tambah Data Suspect</div>
+      <button class="btn-icon" onclick="closeModal('modal-suspect')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label class="form-label">Nama Outlet <span class="required">*</span></label>
+        <input class="form-input" id="s-outlet" type="text" placeholder="cth. FTL Cirendeu, Outlet Mall X...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Jenis Request Terkait <span class="required">*</span></label>
+          <input class="form-input" id="s-loss-type" type="text" placeholder="cth. Kehilangan dompet, Kerusakan fasilitas, Special case...">
+      </div>
+
+      <div class="form-group" style="margin-bottom:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+          <label class="form-label" style="margin-bottom:0;">Nama Suspect <span class="required">*</span></label>
+          <button type="button" onclick="addNameRow()" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#1565C0;background:var(--primary-light);border:1.5px solid var(--border2);border-radius:6px;padding:4px 10px;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#BBDEFB'" onmouseout="this.style.background='var(--primary-light)'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Suspect
+          </button>
+        </div>
+        <div id="suspect-name-rows" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-suspect')">Batal</button>
+      <button class="btn btn-primary" onclick="submitSuspect()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Simpan Suspect
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETAIL REQUEST -->
+<div class="overlay" id="modal-detail">
+  <div class="modal" style="width:600px;max-height:88vh;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="detail-title">Detail Request</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-top:2px;" id="detail-id"></div>
+      </div>
+      <button class="btn-icon" onclick="closeModal('modal-detail')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+    <div class="modal-footer" id="detail-footer"></div>
+  </div>
+</div>
+
+<!-- MODAL: TAMBAH / EDIT OUTLET -->
+<div class="overlay" id="modal-outlet">
+  <div class="modal" style="width:420px;">
+    <div class="modal-header">
+      <div class="modal-title" id="outlet-modal-title">Tambah Outlet</div>
+      <button class="btn-icon" onclick="closeModal('modal-outlet')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Nama Outlet <span class="required">*</span></label>
+        <input class="form-input" id="o-name" type="text" placeholder="cth. Outlet Surabaya, Outlet Mall X...">
+        <div class="form-hint">Nama ini akan tampil di semua pilihan outlet</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-outlet')">Batal</button>
+      <button class="btn btn-primary" id="outlet-submit-btn" onclick="submitOutlet()">Simpan Outlet</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ─── DATA STORE ───────────────────────────────────────────────
+let requests = [
+  { id:'LOS-001', outlet:'Outlet Jakarta Selatan', lossType:'Dompet', reporter:'Budi Santoso', priority:'Tinggi', date:'2025-04-10', time:'14:30', location:'Area kasir lantai 1', desc:'Dompet coklat kulit, berisi KTP dan kartu ATM BCA', suspect:'', status:'open', createdAt:'2025-04-10T14:30:00', closedAt:null },
+  { id:'LOS-002', outlet:'Outlet Bekasi', lossType:'HP / Smartphone', reporter:'Siti Rahayu', priority:'Tinggi', date:'2025-04-11', time:'11:00', location:'Fitting room', desc:'iPhone 14 Pro warna hitam space grey', suspect:'', status:'open', createdAt:'2025-04-11T11:00:00', closedAt:null },
+  { id:'LOS-003', outlet:'Outlet Jakarta Pusat', lossType:'Jam Tangan', reporter:'Ahmad Fauzi', priority:'Tinggi', date:'2025-04-12', time:'16:00', location:'Toilet pria lantai 2', desc:'Jam tangan Rolex Submariner warna silver', suspect:'Andi Susanto', status:'done', createdAt:'2025-04-12T16:00:00', closedAt:'2025-04-13T09:00:00' },
+  { id:'LOS-004', outlet:'Outlet Depok', lossType:'Tas', reporter:'Dewi Kartika', priority:'Sedang', date:'2025-04-14', time:'09:15', location:'Area parkir motor', desc:'Tas ransel hitam merek Eiger, berisi laptop', suspect:'', status:'open', createdAt:'2025-04-14T09:15:00', closedAt:null },
+  { id:'LOS-005', outlet:'Outlet Tangerang', lossType:'Sandal', reporter:'Eko Prasetyo', priority:'Rendah', date:'2025-04-15', time:'12:00', location:'Mushola lantai 1', desc:'Sandal jepit warna biru merek Crocs', suspect:'', status:'done', createdAt:'2025-04-15T12:00:00', closedAt:'2025-04-16T08:00:00' },
+  { id:'LOS-006', outlet:'Outlet Jakarta Selatan', lossType:'Perhiasan / Aksesoris', reporter:'Rina Wulandari', priority:'Tinggi', date:'2025-04-16', time:'15:45', location:'Ruang ganti lantai 3', desc:'Kalung emas 24k dengan liontin berlian', suspect:'Maya Susilo', status:'open', createdAt:'2025-04-16T15:45:00', closedAt:null },
+  { id:'LOS-007', outlet:'Outlet Bandung', lossType:'Kunci', reporter:'Hendra Wijaya', priority:'Rendah', date:'2025-04-17', time:'13:20', location:'Lobi utama', desc:'Kunci motor Honda Beat warna merah', suspect:'', status:'open', createdAt:'2025-04-17T13:20:00', closedAt:null },
+  { id:'LOS-008', outlet:'Outlet Jakarta Barat', lossType:'Laptop / Tablet', reporter:'Maya Putri', priority:'Sedang', date:'2025-04-18', time:'10:00', location:'Café area lantai 1', desc:'MacBook Air M2 warna silver 13 inch', suspect:'Dedi Kurniawan', status:'open', createdAt:'2025-04-18T10:00:00', closedAt:null },
+];
+
+let suspects = [
+  { id:'SUS-001', name:'Andi Susanto', outlet:'Outlet Jakarta Pusat', lossType:'Jam Tangan', status:'Terkonfirmasi', desc:'Pria, 35 thn, kemeja hitam, celana jeans, rambut cepak', notes:'Terlihat di CCTV sekitar TKP pukul 15.50. Sudah diserahkan ke keamanan.', createdAt:'2025-04-13T10:00:00' },
+  { id:'SUS-002', name:'Maya Susilo', outlet:'Outlet Jakarta Selatan', lossType:'Perhiasan / Aksesoris', status:'Dalam Pemantauan', desc:'Wanita, 28 thn, baju merah, rok hitam, rambut panjang dikuncir', notes:'Terlihat bersama korban di area ruang ganti. Perlu penyelidikan lebih lanjut.', createdAt:'2025-04-17T09:00:00' },
+  { id:'SUS-003', name:'Dedi Kurniawan', outlet:'Outlet Jakarta Barat', lossType:'Laptop / Tablet', status:'Teridentifikasi', desc:'Pria, 25 thn, hoodie abu-abu, celana training, masker hitam', notes:'Tampak membawa tas besar keluar area café tidak lama setelah kejadian.', createdAt:'2025-04-18T14:00:00' },
+];
+
+let reqCounter = 8;
+let susCounter = 3;
+
+let editingOutletId = null;
+let activeReqFilter = 'semua';
+let activeHistFilter = 'semua';
+
+let outlets = [
+  { id:'OUT-001', name:'FTL Cirendeu', createdAt:'2025-01-01T00:00:00' },
+];
+
+let outletCounter = 1;
+
+// ─── UTILS ────────────────────────────────────────────────────
+function genReqId() { reqCounter++; return 'LOS-' + String(reqCounter).padStart(3,'0'); }
+function genSusId() { susCounter++; return 'SUS-' + String(susCounter).padStart(3,'0'); }
+
+function formatDate(str) {
+  if (!str) return '—';
+  const d = new Date(str);
+  return d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+}
+function formatDateTime(str) {
+  if (!str) return '—';
+  const d = new Date(str);
+  return d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) + ' ' + d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+}
+
+function commentBadge(r) {
+  const count = (r.comments && r.comments.length) || 0;
+  if (!count) return '';
+  const last = r.comments[r.comments.length - 1];
+  return `<button class="btn-icon" onclick="openDetail('${r.id}')" title="${count} komentar — ${last.author}: ${last.text.slice(0,60)}" style="position:relative;background:var(--primary-light);border-color:var(--border2);color:#1565C0;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span style="position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;background:#1565C0;color:#fff;font-size:9px;font-weight:700;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;">${count}</span>
+  </button>`;
+}
+
+function lossTypeBadge(t) {
+  if (!t) return '<span class="loss-tag">—</span>';
+  let cls = '';
+  if (t.startsWith('Kerusakan'))             cls = 'type-kerusakan';
+  else if (t === 'Special Case by Member')   cls = 'type-special-member';
+  else if (t === 'Special Case by Staff')    cls = 'type-special-staff';
+  return `<span class="loss-tag ${cls}">${t}</span>`;
+}
+
+function priorityBadge(p) {
+  if (p === 'Tinggi') return `<span class="priority p-high"><span class="p-dot"></span>Tinggi</span>`;
+  if (p === 'Sedang') return `<span class="priority p-med"><span class="p-dot"></span>Sedang</span>`;
+  return `<span class="priority p-low"><span class="p-dot"></span>Rendah</span>`;
+}
+function statusBadge(s) {
+  if (s === 'open') return `<span class="status s-open">Aktif</span>`;
+  if (s === 'done') return `<span class="status s-done">Selesai</span>`;
+  return `<span class="status s-reject">Ditolak</span>`;
+}
+
+function initDate() {
+  const now = new Date();
+  document.getElementById('topbar-date').textContent = now.toLocaleDateString('id-ID', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+}
+
+// ─── METRICS ─────────────────────────────────────────────────
+function updateMetrics() {
+  const open = requests.filter(r=>r.status==='open');
+  const done = requests.filter(r=>r.status==='done');
+  const high = open.filter(r=>r.priority==='Tinggi');
+  const med = open.filter(r=>r.priority==='Sedang');
+  const low = open.filter(r=>r.priority==='Rendah');
+  document.getElementById('metrics').innerHTML = `
+    <div class="metric-card mc-total" onclick="goToTab('requests','semua')" style="cursor:pointer;" title="Lihat semua request">
+      <div class="metric-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="metric-label">Total Request</div>
+      <div class="metric-value mv-total">${requests.length}</div>
+      <div class="metric-sub">Semua waktu →</div>
+    </div>
+    <div class="metric-card mc-high" onclick="goToTab('requests','Tinggi')" style="cursor:pointer;" title="Filter prioritas tinggi">
+      <div class="metric-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+      <div class="metric-label">Prioritas Tinggi</div>
+      <div class="metric-value mv-high">${high.length}</div>
+      <div class="metric-sub">Aktif sekarang →</div>
+    </div>
+    <div class="metric-card mc-med" onclick="goToTab('requests','Sedang')" style="cursor:pointer;" title="Filter prioritas sedang">
+      <div class="metric-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="metric-label">Prioritas Sedang</div>
+      <div class="metric-value mv-med">${med.length}</div>
+      <div class="metric-sub">Aktif sekarang →</div>
+    </div>
+    <div class="metric-card mc-low" onclick="goToTab('requests','Rendah')" style="cursor:pointer;" title="Filter prioritas rendah">
+      <div class="metric-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="metric-label">Prioritas Rendah</div>
+      <div class="metric-value mv-low">${low.length}</div>
+      <div class="metric-sub">Aktif sekarang →</div>
+    </div>
+    <div class="metric-card mc-done" onclick="goToTab('history','semua')" style="cursor:pointer;" title="Lihat history">
+      <div class="metric-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <div class="metric-label">Selesai</div>
+      <div class="metric-value mv-done">${done.length}</div>
+      <div class="metric-sub">Total ditangani →</div>
+    </div>`;
+  document.getElementById('badge-open').textContent = open.length;
+  document.getElementById('badge-done').textContent = done.length;
+  document.getElementById('badge-suspect').textContent = suspects.length;
+  updateStats();
+}
+
+function updateStats() {
+  // top loss types
+  const lossCount = {};
+  requests.forEach(r => { lossCount[r.lossType] = (lossCount[r.lossType]||0)+1; });
+  const sortedLoss = Object.entries(lossCount).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const maxLoss = sortedLoss[0]?.[1] || 1;
+  document.getElementById('top-loss-list').innerHTML = sortedLoss.map(([k,v])=>`
+    <div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:12px;color:var(--text2);">${k}</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3);">${v}x</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/maxLoss*100)}%;background:var(--primary);"></div></div>
+    </div>`).join('') || '<div style="font-size:12px;color:var(--text3);margin-top:8px;">Belum ada data</div>';
+
+  // top outlets
+  const outletCount = {};
+  requests.filter(r=>r.status==='open').forEach(r => { outletCount[r.outlet] = (outletCount[r.outlet]||0)+1; });
+  const sortedOutlet = Object.entries(outletCount).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const maxOutlet = sortedOutlet[0]?.[1] || 1;
+  document.getElementById('top-outlet-list').innerHTML = sortedOutlet.map(([k,v])=>`
+    <div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:12px;color:var(--text2);">${k.replace('Outlet ','')}</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3);">${v} aktif</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/maxOutlet*100)}%;background:var(--red);"></div></div>
+    </div>`).join('') || '<div style="font-size:12px;color:var(--text3);margin-top:8px;">Tidak ada aktif</div>';
+
+  // suspect summary
+  const ssByStatus = {};
+  suspects.forEach(s=>{ ssByStatus[s.status]=(ssByStatus[s.status]||0)+1; });
+  document.getElementById('suspect-summary').innerHTML = suspects.length === 0
+    ? '<div style="font-size:12px;color:var(--text3);margin-top:8px;">Belum ada suspect</div>'
+    : `<div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+        ${Object.entries(ssByStatus).map(([k,v])=>`
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:var(--text2);">${k}</span>
+            <span style="font-family:var(--font-mono);font-size:11px;background:var(--red-light);color:var(--red);padding:2px 8px;border-radius:99px;border:1px solid var(--red-border);">${v}</span>
+          </div>`).join('')}
+        <div style="margin-top:4px;font-size:11px;color:var(--text3);">Total: ${suspects.length} suspect</div>
+      </div>`;
+}
+
+// ─── RENDER DASHBOARD TABLE ───────────────────────────────────
+function renderDashboard() {
+  // hanya tampilkan request aktif (open) di dashboard, maks 7
+  const latest = requests.filter(r=>r.status==='open').sort((a,b)=>{
+    const po = {Tinggi:0,Sedang:1,Rendah:2};
+    if (po[a.priority] !== po[b.priority]) return po[a.priority]-po[b.priority];
+    return new Date(b.createdAt)-new Date(a.createdAt);
+  }).slice(0,7);
+  const tb = document.getElementById('dash-tbody');
+  if (!latest.length) { tb.innerHTML=`<tr><td colspan="7"><div class="empty-state"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><div class="empty-title">Tidak ada request aktif</div></div></td></tr>`; return; }
+  tb.innerHTML = latest.map(r => `
+    <tr>
+      <td><span class="id-badge">${r.id}</span></td>
+      <td><span class="outlet-tag">${r.outlet}</span></td>
+      <td>${lossTypeBadge(r.lossType)}</td>
+      <td>${priorityBadge(r.priority)}</td>
+      <td style="color:var(--text2);">${r.reporter}</td>
+      <td style="font-size:12px;color:var(--text3);">${r.date}${r.time?' '+r.time:''}</td>
+      <td><div class="actions">
+        ${commentBadge(r)}
+        <button class="btn-icon" title="Detail" onclick="openDetail('${r.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="btn-icon" title="Tandai Selesai" style="color:var(--green);border-color:var(--green-border);background:var(--green-light);" onclick="markDone('${r.id}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <button class="btn-icon" title="Hapus" style="color:var(--red);border-color:var(--red-border);background:var(--red-light);" onclick="deleteRequest('${r.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div></td>
+    </tr>`).join('');
+}
+
+// ─── RENDER REQUESTS ──────────────────────────────────────────
+function renderRequests() {
+  const q = (document.getElementById('req-search')?.value||'').toLowerCase();
+  // hanya tampilkan request aktif (open)
+  let list = requests.filter(r => r.status === 'open').sort((a,b)=>{
+    const po = {Tinggi:0,Sedang:1,Rendah:2};
+    if (po[a.priority] !== po[b.priority]) return po[a.priority]-po[b.priority];
+    return new Date(b.createdAt)-new Date(a.createdAt);
+  });
+  if (activeReqFilter !== 'semua') list = list.filter(r=>r.priority===activeReqFilter);
+  if (q) list = list.filter(r=> r.outlet.toLowerCase().includes(q)||r.reporter.toLowerCase().includes(q)||r.lossType.toLowerCase().includes(q)||r.id.toLowerCase().includes(q));
+
+  // update badge count
+  const badge = document.getElementById('active-count-badge');
+  if (badge) badge.textContent = requests.filter(r=>r.status==='open').length;
+
+  const tb = document.getElementById('req-tbody');
+  if (!list.length) {
+    tb.innerHTML=`<tr><td colspan="8"><div class="empty-state"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div class="empty-title">Tidak ada request aktif</div><div style="font-size:13px;color:var(--text3);">Semua request telah selesai atau belum ada yang masuk</div></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = list.map(r=>`
+    <tr>
+      <td><span class="id-badge">${r.id}</span></td>
+      <td><span class="outlet-tag">${r.outlet}</span></td>
+      <td>${lossTypeBadge(r.lossType)}</td>
+      <td>${priorityBadge(r.priority)}</td>
+      <td style="color:var(--text2);">${r.reporter}</td>
+      <td style="font-size:12px;color:var(--text3);">${r.date}</td>
+      <td style="font-size:12px;color:var(--text3);">${r.time||'—'}</td>
+      <td><div class="actions">
+        ${commentBadge(r)}
+        <button class="btn-icon" title="Detail" onclick="openDetail('${r.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="btn-icon" title="Tandai Selesai" style="color:var(--green);border-color:var(--green-border);background:var(--green-light);" onclick="markDone('${r.id}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <button class="btn-icon" title="Tolak Request" style="color:var(--orange);border-color:var(--orange-border);background:var(--orange-light);" onclick="markReject('${r.id}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button class="btn-icon" title="Hapus" style="color:var(--red);border-color:var(--red-border);background:var(--red-light);" onclick="deleteRequest('${r.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function setReqFilter(f, el) {
+  activeReqFilter = f;
+  document.querySelectorAll('#page-requests .filter-pill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderRequests();
+}
+
+// ─── RENDER HISTORY ───────────────────────────────────────────
+function renderHistory() {
+  const q = (document.getElementById('hist-search')?.value||'').toLowerCase();
+  let list = requests.filter(r=>r.status!=='open').sort((a,b)=>new Date(b.closedAt||b.createdAt)-new Date(a.closedAt||a.createdAt));
+  if (activeHistFilter !== 'semua') {
+    if (activeHistFilter==='Selesai') list=list.filter(r=>r.status==='done');
+    if (activeHistFilter==='Ditolak') list=list.filter(r=>r.status==='reject');
+  }
+  if (q) list=list.filter(r=>r.outlet.toLowerCase().includes(q)||r.reporter.toLowerCase().includes(q)||r.lossType.toLowerCase().includes(q));
+  const container = document.getElementById('history-list');
+  if (!list.length) {
+    container.innerHTML=`<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="empty-title">Belum ada history</div><div style="font-size:13px;color:var(--text3);">Request yang selesai atau ditolak akan muncul di sini</div></div>`;
+    return;
+  }
+  container.innerHTML = list.map(r=>`
+    <div class="history-item">
+      <div class="history-icon">
+        ${r.status==='done'
+          ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`
+          : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--text3);"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`}
+      </div>
+      <div class="history-info">
+        <div class="history-title">${r.lossType} — ${r.outlet}</div>
+        <div class="history-meta">
+          <span>${r.id}</span>
+          <span>Pelapor: ${r.reporter}</span>
+          <span>Kejadian: ${r.date}${r.time?' '+r.time:''}</span>
+          ${r.closedAt?`<span>Ditutup: ${formatDateTime(r.closedAt)}</span>`:''}
+        </div>
+        ${r.desc?`<div style="font-size:12px;color:var(--text3);margin-top:4px;">${r.desc}</div>`:''}
+        ${r.comments&&r.comments.length?`<div style="margin-top:6px;display:flex;align-items:flex-start;gap:6px;background:var(--primary-light);border:1px solid var(--border2);border-radius:var(--radius);padding:7px 10px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2.5" style="flex-shrink:0;margin-top:1px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div>
+            <span style="font-size:11px;font-weight:700;color:#1565C0;">${r.comments[r.comments.length-1].author}</span>
+            <span style="font-size:11px;color:var(--text3);margin-left:6px;">${formatDateTime(r.comments[r.comments.length-1].createdAt)}</span>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px;">${r.comments[r.comments.length-1].text.length>80?r.comments[r.comments.length-1].text.slice(0,80)+'…':r.comments[r.comments.length-1].text}</div>
+          </div>
+        </div>`:''}
+      </div>
+      <div class="history-badge">
+        ${commentBadge(r)}
+        ${statusBadge(r.status)}
+        ${priorityBadge(r.priority)}
+        <button class="btn-icon" title="Detail" onclick="openDetail('${r.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="btn-icon" title="Hapus" style="color:var(--red);border-color:var(--red-border);background:var(--red-light);" onclick="deleteRequest('${r.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function setHistFilter(f, el) {
+  activeHistFilter = f;
+  document.querySelectorAll('#page-history .filter-pill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderHistory();
+}
+
+// ─── RENDER SUSPECTS ──────────────────────────────────────────
+function renderSuspects() {
+  const q = (document.getElementById('sus-search')?.value||'').toLowerCase();
+  let list = suspects.filter(s=>!q||s.name.toLowerCase().includes(q)||s.outlet.toLowerCase().includes(q)||s.lossType.toLowerCase().includes(q));
+  const tbody = document.getElementById('suspect-grid');
+  const empty = document.getElementById('suspect-empty');
+
+  if (!list.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const stBadge = st => {
+    if (st === 'Terkonfirmasi')   return `<span style="display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--red-light);color:var(--red);border:1px solid var(--red-border);">Terkonfirmasi</span>`;
+    if (st === 'Dalam Pemantauan') return `<span style="display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--orange-light);color:var(--orange);border:1px solid var(--orange-border);">Dalam Pemantauan</span>`;
+    return `<span style="display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--surface3);color:var(--text3);border:1px solid var(--border2);">Teridentifikasi</span>`;
+  };
+
+  tbody.innerHTML = list.map((s, i) => `
+    <tr>
+      <td style="font-size:12px;color:var(--text3);font-weight:600;width:44px;">${i + 1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--red-light),#ffcdd2);border:1px solid var(--red-border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--red);flex-shrink:0;">
+            ${s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+          </div>
+          <span style="font-weight:600;font-size:13px;">${s.name}</span>
+        </div>
+      </td>
+      <td><span class="outlet-tag">${s.outlet}</span></td>
+      <td>${lossTypeBadge(s.lossType)}</td>
+      <td>${stBadge(s.status)}</td>
+      <td style="font-size:12px;color:var(--text3);">${formatDate(s.createdAt)}</td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-danger btn-sm" onclick="deleteSuspect('${s.id}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+            Hapus
+          </button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+// ─── MODAL LOGIC ──────────────────────────────────────────────
+
+function openLossModal() {
+  document.getElementById('f-outlet').value = '';
+  document.getElementById('f-loss-type').value = '';
+  document.getElementById('f-reporter').value = '';
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('f-time').value = '';
+  document.getElementById('f-desc').value = '';
+  clearPhotos();
+
+  document.getElementById('modal-loss').classList.add('open');
+}
+
+// ── PHOTO HANDLER ──────────────────────────────────────────────
+let selectedPhotos = []; // array of { file, dataUrl }
+
+function handlePhotoSelect(input) {
+  const files = Array.from(input.files);
+  const remaining = 5 - selectedPhotos.length;
+  if (remaining <= 0) { showToast('Maksimal 5 foto.', 'error'); input.value=''; return; }
+  const toAdd = files.slice(0, remaining);
+  if (files.length > remaining) showToast(`Hanya ${remaining} foto pertama yang ditambahkan (maks. 5).`, 'info');
+
+  toAdd.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      selectedPhotos.push({ file, dataUrl: e.target.result });
+      renderPhotoPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderPhotoPreview() {
+  const wrap = document.getElementById('photo-preview-wrap');
+  const list = document.getElementById('photo-preview-list');
+  const dz   = document.getElementById('photo-dropzone');
+
+  if (!selectedPhotos.length) { wrap.style.display='none'; dz.style.display='block'; return; }
+  wrap.style.display = 'block';
+  dz.style.display = selectedPhotos.length < 5 ? 'block' : 'none';
+
+  list.innerHTML = selectedPhotos.map((p, i) => `
+    <div style="position:relative;width:72px;height:72px;border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--border2);box-shadow:var(--shadow-sm);">
+      <img src="${p.dataUrl}" style="width:100%;height:100%;object-fit:cover;" alt="foto ${i+1}">
+      <button type="button" onclick="removePhoto(${i})" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+function removePhoto(idx) {
+  selectedPhotos.splice(idx, 1);
+  renderPhotoPreview();
+}
+
+function clearPhotos() {
+  selectedPhotos = [];
+  const wrap = document.getElementById('photo-preview-wrap');
+  const dz   = document.getElementById('photo-dropzone');
+  const list = document.getElementById('photo-preview-list');
+  if (wrap) wrap.style.display = 'none';
+  if (dz)   dz.style.display   = 'block';
+  if (list) list.innerHTML      = '';
+}
+
+let suspectNameRowCount = 0;
+
+function addNameRow(value) {
+  suspectNameRowCount++;
+  const id = `sname-${suspectNameRowCount}`;
+  const row = document.createElement('div');
+  row.id = `row-${id}`;
+  row.style.cssText = 'display:flex;align-items:center;gap:8px;animation:fadeIn .15s ease;';
+  row.innerHTML = `
+    <div style="width:26px;height:26px;flex-shrink:0;background:var(--primary-light);border:1.5px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#1565C0;">${suspectNameRowCount}</div>
+    <input class="form-input" id="${id}" type="text" placeholder="Nama lengkap & ID Member suspect" value="${value||''}" style="flex:1;margin-bottom:0;" onkeydown="if(event.key==='Enter'){event.preventDefault();addNameRow();}">
+    <button type="button" onclick="removeNameRow('row-${id}')" style="width:30px;height:36px;flex-shrink:0;background:var(--red-light);border:1.5px solid var(--red-border);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='#ffcdd2'" onmouseout="this.style.background='var(--red-light)'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  document.getElementById('suspect-name-rows').appendChild(row);
+  setTimeout(() => document.getElementById(id)?.focus(), 60);
+  renumberRows();
+}
+
+function removeNameRow(rowId) {
+  const el = document.getElementById(rowId);
+  if (el) el.remove();
+  renumberRows();
+}
+
+function renumberRows() {
+  document.querySelectorAll('#suspect-name-rows > div').forEach((row, i) => {
+    const numEl = row.querySelector('div');
+    if (numEl) numEl.textContent = i + 1;
+  });
+}
+
+function openSuspectModal() {
+  suspectNameRowCount = 0;
+  document.getElementById('suspect-name-rows').innerHTML = '';
+
+  document.getElementById('s-outlet').value = '';
+  document.getElementById('s-loss-type').value = '';
+  document.getElementById('modal-suspect').classList.add('open');
+  addNameRow(); // mulai dengan 1 baris
+}
+
+function clearSuspectForm() {
+  suspectNameRowCount = 0;
+  document.getElementById('suspect-name-rows').innerHTML = '';
+  document.getElementById('s-outlet').value = '';
+  document.getElementById('s-loss-type').value = '';
+  addNameRow();
+}
+
+function addSuspectToSession() { submitSuspect(); }
+
+function submitSuspect() {
+  const outlet = document.getElementById('s-outlet').value;
+  const lossType = document.getElementById('s-loss-type').value.trim();
+  if (!outlet || !lossType) { showToast('Pilih outlet dan jenis request terlebih dahulu.', 'error'); return; }
+
+  const rows = document.querySelectorAll('#suspect-name-rows input[type="text"]');
+  const names = [...rows].map(r => r.value.trim()).filter(n => n.length > 0);
+  if (!names.length) { showToast('Minimal satu nama suspect harus diisi.', 'error'); return; }
+
+  names.forEach(name => {
+    suspects.unshift({
+      id: genSusId(), name, outlet, lossType,
+      status: 'Teridentifikasi', desc: '', notes: '',
+      createdAt: new Date().toISOString(),
+    });
+  });
+
+  refreshAll();
+  closeModal('modal-suspect');
+  showToast(`${names.length} suspect berhasil disimpan.`, 'success');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function submitLoss() {
+  const outlet = document.getElementById('f-outlet').value;
+  const lossType = document.getElementById('f-loss-type').value.trim();
+  const reporter = document.getElementById('f-reporter').value.trim();
+  const priority = document.getElementById('f-priority').value;
+  const date = document.getElementById('f-date').value;
+  if (!outlet||!lossType||!reporter||!date) { showToast('Mohon isi semua field wajib.','error'); return; }
+  const req = {
+    id: genReqId(), outlet, lossType, reporter, priority, date,
+    time: document.getElementById('f-time').value,
+    location: document.getElementById('f-location').value.trim(),
+    desc: document.getElementById('f-desc').value.trim(),
+    suspect: document.getElementById('f-suspect-link').value,
+    photos: selectedPhotos.map(p => p.dataUrl),
+    status: 'open',
+    createdAt: new Date().toISOString(),
+    closedAt: null,
+  };
+  requests.unshift(req);
+  clearPhotos();
+  closeModal('modal-loss');
+  refreshAll();
+  showToast(`Request ${req.id} berhasil dibuat.`, 'success');
+}
+
+function openDetail(id) {
+  const r = requests.find(x=>x.id===id);
+  if (!r) return;
+  if (!r.comments) r.comments = [];
+  document.getElementById('detail-title').textContent = `${r.lossType} — ${r.outlet}`;
+  document.getElementById('detail-id').textContent = r.id;
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-field"><div class="detail-field-label">Outlet</div><div class="detail-field-value" style="color:var(--primary);font-family:var(--font-mono);font-size:12px;">${r.outlet}</div></div>
+      <div class="detail-field"><div class="detail-field-label">Jenis Request</div><div class="detail-field-value">${lossTypeBadge(r.lossType)}</div></div>
+      <div class="detail-field"><div class="detail-field-label">Prioritas</div><div class="detail-field-value">${priorityBadge(r.priority)}</div></div>
+      <div class="detail-field"><div class="detail-field-label">Status</div><div class="detail-field-value">${statusBadge(r.status)}</div></div>
+      <div class="detail-field"><div class="detail-field-label">Nama & ID Member</div><div class="detail-field-value">${r.reporter}</div></div>
+      <div class="detail-field"><div class="detail-field-label">Tanggal Kejadian</div><div class="detail-field-value" style="font-family:var(--font-mono);font-size:12px;">${r.date}${r.time?' pukul '+r.time:''}</div></div>
+      ${r.location?`<div class="detail-field full"><div class="detail-field-label">Lokasi Kejadian</div><div class="detail-field-value">${r.location}</div></div>`:''}
+      ${r.desc?`<div class="detail-field full"><div class="detail-field-label">Kronologi Lengkap</div><div class="detail-field-value" style="white-space:pre-wrap;line-height:1.6;">${r.desc}</div></div>`:''}
+      ${r.gdriveLink?`<div class="detail-field full"><div class="detail-field-label">Link Google Drive</div><div class="detail-field-value"><a href="${r.gdriveLink}" target="_blank" style="color:#1565C0;font-weight:600;word-break:break-all;">${r.gdriveLink}</a></div></div>`:''}
+      ${r.photos&&r.photos.length?`<div class="detail-field full"><div class="detail-field-label">Foto Pendukung (${r.photos.length})</div><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">${r.photos.map((src,i)=>`<a href="${src}" target="_blank"><img src="${src}" style="width:80px;height:80px;object-fit:cover;border-radius:var(--radius);border:1.5px solid var(--border2);box-shadow:var(--shadow-sm);cursor:zoom-in;" title="Foto ${i+1}"></a>`).join('')}</div></div>`:''}
+      ${r.suspect?`<div class="detail-field full"><div class="detail-field-label">Suspect Terkait</div><div class="detail-field-value" style="color:var(--red);">${r.suspect}</div></div>`:''}
+    </div>
+    <div style="font-size:11px;font-family:var(--font-mono);color:var(--text3);margin-bottom:12px;">TIMELINE</div>
+    <div class="detail-timeline">
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+          <div class="tl-dot active"></div>
+          <div class="tl-line" style="height:28px;"></div>
+        </div>
+        <div class="tl-content"><div class="tl-event">Request dibuat</div><div class="tl-time">${formatDateTime(r.createdAt)}</div></div>
+      </div>
+      ${r.closedAt?`
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-content"><div class="tl-event">${r.status==='done'?'Ditandai Selesai':'Ditolak'}</div><div class="tl-time">${formatDateTime(r.closedAt)}</div></div>
+      </div>`:`
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content"><div class="tl-event" style="color:var(--text3);">Menunggu penyelesaian...</div></div>
+      </div>`}
+    </div>
+
+    <div class="comment-section">
+      <div class="comment-section-title">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:5px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Komentar Progress (${r.comments.length})
+      </div>
+      <div class="comment-list" id="comment-list-${r.id}">
+        ${r.comments.length === 0
+          ? `<div class="comment-empty">Belum ada komentar. Tambahkan progress di bawah.</div>`
+          : r.comments.map(c=>`
+            <div class="comment-item">
+              <div class="comment-meta">
+                <div style="width:26px;height:26px;border-radius:7px;background:var(--primary-light);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#1565C0;flex-shrink:0;">${c.author.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
+                <span class="comment-author">${c.author}</span>
+                <span class="comment-time">${formatDateTime(c.createdAt)}</span>
+              </div>
+              <div class="comment-text">${c.text.replace(/\n/g,'<br>')}</div>
+            </div>`).join('')}
+      </div>
+      <div class="comment-input-wrap">
+        <textarea id="comment-input-${r.id}" placeholder="Tulis update progress, catatan, atau informasi terbaru..." rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendComment('${r.id}');}"></textarea>
+        <button class="comment-send-btn" onclick="sendComment('${r.id}')" title="Kirim komentar (Enter)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:5px;">Tekan Enter untuk kirim · Shift+Enter untuk baris baru</div>
+    </div>`;
+
+  document.getElementById('detail-footer').innerHTML = `
+    <button class="btn btn-danger btn-sm" onclick="deleteRequest('${r.id}')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      Hapus
+    </button>
+    <div style="flex:1;"></div>
+    ${r.status!=='open' ? `<span style="font-size:12px;color:var(--text3);font-weight:500;">${r.status==='done'?'✓ Sudah diselesaikan':'✗ Ditolak'}</span>` : ''}
+    <button class="btn btn-ghost" onclick="closeModal('modal-detail')">Tutup</button>
+    ${r.status==='open'?`<button class="btn btn-ghost" onclick="markReject('${r.id}');closeModal('modal-detail')">Tolak</button>`:''}
+    ${r.status==='open'?`<button class="btn btn-success" onclick="markDone('${r.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tandai Selesai</button>`:''}`;
+  document.getElementById('modal-detail').classList.add('open');
+}
+
+function sendComment(reqId) {
+  const input = document.getElementById(`comment-input-${reqId}`);
+  const text = input.value.trim();
+  if (!text) return;
+  const r = requests.find(x=>x.id===reqId);
+  if (!r) return;
+  if (!r.comments) r.comments = [];
+  r.comments.push({
+    id: Date.now(),
+    author: 'Staff',
+    text,
+    createdAt: new Date().toISOString(),
+  });
+  input.value = '';
+  // Re-render comment list tanpa menutup modal
+  const list = document.getElementById(`comment-list-${reqId}`);
+  if (list) {
+    list.innerHTML = r.comments.map(c=>`
+      <div class="comment-item">
+        <div class="comment-meta">
+          <div style="width:26px;height:26px;border-radius:7px;background:var(--primary-light);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#1565C0;flex-shrink:0;">${c.author.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
+          <span class="comment-author">${c.author}</span>
+          <span class="comment-time">${formatDateTime(c.createdAt)}</span>
+        </div>
+        <div class="comment-text">${c.text.replace(/\n/g,'<br>')}</div>
+      </div>`).join('');
+    list.scrollTop = list.scrollHeight;
+    // update judul
+    const title = list.closest('.comment-section')?.querySelector('.comment-section-title');
+    if (title) title.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:5px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Komentar Progress (${r.comments.length})`;
+  }
+  input.focus();
+}
+
+function markDone(id) {
+  document.getElementById('gdrive-req-id').value = id;
+  document.getElementById('gdrive-link-input').value = '';
+  document.getElementById('gdrive-link-input').style.borderColor = '';
+  const r = requests.find(x=>x.id===id);
+  if (r) {
+    document.getElementById('gdrive-req-label').textContent = `${id} · ${r.lossType} · ${r.outlet}`;
+  }
+  closeModal('modal-detail');
+  document.getElementById('modal-gdrive').classList.add('open');
+  setTimeout(() => document.getElementById('gdrive-link-input').focus(), 120);
+}
+
+function confirmMarkDone() {
+  const id = document.getElementById('gdrive-req-id').value;
+  const link = document.getElementById('gdrive-link-input').value.trim();
+  const r = requests.find(x=>x.id===id);
+  if (!r) return;
+  r.status = 'done';
+  r.closedAt = new Date().toISOString();
+  r.gdriveLink = link;
+  closeModal('modal-gdrive');
+  refreshAll();
+  showToast(`${id} ditandai selesai.`, 'success');
+}
+function markReject(id) {
+  const r = requests.find(x=>x.id===id);
+  if (!r) return;
+  r.status = 'reject'; r.closedAt = new Date().toISOString();
+  refreshAll(); showToast(`${id} ditolak.`, 'info');
+}
+function deleteRequest(id) {
+  const r = requests.find(x=>x.id===id);
+  if (!r) return;
+  if (!confirm(`Hapus request ${id}?\n\n"${r.lossType}" dari ${r.outlet}\n\nData tidak dapat dikembalikan.`)) return;
+  requests = requests.filter(x=>x.id!==id);
+  closeModal('modal-detail');
+  refreshAll();
+  showToast(`Request ${id} berhasil dihapus.`, 'info');
+}
+function deleteSuspect(id) {
+  if (!confirm('Hapus data suspect ini?')) return;
+  suspects = suspects.filter(s=>s.id!==id);
+  refreshAll(); showToast('Data suspect dihapus.','info');
+}
+
+// ─── OUTLET MANAGEMENT ───────────────────────────────────────
+function renderOutlets() {
+  const tb = document.getElementById('outlet-tbody');
+  if (!outlets.length) {
+    tb.innerHTML=`<tr><td colspan="5"><div class="empty-state"><div class="empty-title">Belum ada outlet</div></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = outlets.map((o, i) => {
+    const reqCount = requests.filter(r=>r.outlet===o.name).length;
+    return `<tr>
+      <td style="font-family:var(--font-mono);font-size:12px;color:var(--text3);">${i+1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></div>
+          <span style="font-weight:500;">${o.name}</span>
+        </div>
+      </td>
+      <td>
+        <span style="font-family:var(--font-mono);font-size:12px;background:var(--surface3);color:var(--text2);padding:2px 10px;border-radius:99px;">${reqCount} request</span>
+      </td>
+      <td style="font-family:var(--font-mono);font-size:12px;color:var(--text3);">${formatDate(o.createdAt)}</td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-ghost btn-sm" onclick="editOutlet('${o.id}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="deleteOutlet('${o.id}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            Hapus
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('badge-outlet').textContent = outlets.length;
+}
+
+function openOutletModal(editId) {
+  editingOutletId = editId || null;
+  if (editId) {
+    const o = outlets.find(x=>x.id===editId);
+    document.getElementById('o-name').value = o.name;
+    document.getElementById('outlet-modal-title').textContent = 'Edit Outlet';
+    document.getElementById('outlet-submit-btn').textContent = 'Simpan Perubahan';
+  } else {
+    document.getElementById('o-name').value = '';
+    document.getElementById('outlet-modal-title').textContent = 'Tambah Outlet';
+    document.getElementById('outlet-submit-btn').textContent = 'Simpan Outlet';
+  }
+  document.getElementById('modal-outlet').classList.add('open');
+  setTimeout(()=>document.getElementById('o-name').focus(), 100);
+}
+
+function submitOutlet() {
+  const name = document.getElementById('o-name').value.trim();
+  if (!name) { showToast('Nama outlet tidak boleh kosong.','error'); return; }
+  const duplicate = outlets.find(o=>o.name.toLowerCase()===name.toLowerCase() && o.id!==editingOutletId);
+  if (duplicate) { showToast('Nama outlet sudah ada.','error'); return; }
+  if (editingOutletId) {
+    const oldName = outlets.find(o=>o.id===editingOutletId).name;
+    outlets.find(o=>o.id===editingOutletId).name = name;
+    // update existing requests & suspects with old name
+    requests.forEach(r=>{ if(r.outlet===oldName) r.outlet=name; });
+    suspects.forEach(s=>{ if(s.outlet===oldName) s.outlet=name; });
+    showToast(`Outlet diperbarui menjadi "${name}".`, 'success');
+  } else {
+    outletCounter++;
+    outlets.push({ id:'OUT-'+String(outletCounter).padStart(3,'0'), name, createdAt: new Date().toISOString() });
+    showToast(`Outlet "${name}" berhasil ditambahkan.`, 'success');
+  }
+  editingOutletId = null;
+  closeModal('modal-outlet');
+  refreshAll();
+}
+
+function editOutlet(id) { openOutletModal(id); }
+
+function deleteOutlet(id) {
+  const o = outlets.find(x=>x.id===id);
+  const reqCount = requests.filter(r=>r.outlet===o.name).length;
+  if (reqCount > 0) {
+    if (!confirm(`Outlet "${o.name}" memiliki ${reqCount} request terkait.\nHapus tetap akan dilanjutkan. Lanjutkan?`)) return;
+  } else {
+    if (!confirm(`Hapus outlet "${o.name}"?`)) return;
+  }
+  outlets = outlets.filter(x=>x.id!==id);
+  refreshAll();
+  showToast(`Outlet "${o.name}" dihapus.`, 'info');
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────
+function goToTab(page, filter) {
+  const tabMap = { requests: 1, history: 2, suspects: 3, outlets: 4 };
+  const tab = document.querySelectorAll('.nav-tab')[tabMap[page]];
+  if (tab) {
+    switchPage(page, tab);
+    if (page === 'requests' && filter) {
+      // map 'semua'/'open' both → show all active
+      const f = (filter === 'open') ? 'semua' : filter;
+      activeReqFilter = f;
+      document.querySelectorAll('#page-requests .filter-pill').forEach(b => {
+        const label = b.textContent.trim();
+        b.classList.toggle('active', label === f || (f === 'semua' && label === 'Semua'));
+      });
+      renderRequests();
+    }
+    if (page === 'history') {
+      activeHistFilter = 'semua';
+      document.querySelectorAll('#page-history .filter-pill').forEach(b => {
+        b.classList.toggle('active', b.textContent.trim() === 'Semua');
+      });
+      renderHistory();
+    }
+  }
+}
+
+function switchPage(name, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+  if (name==='requests') renderRequests();
+  if (name==='history') renderHistory();
+  if (name==='suspects') renderSuspects();
+  if (name==='outlets') renderOutlets();
+}
+
+// ─── TOAST ────────────────────────────────────────────────────
+function showToast(msg, type='info') {
+  const wrap = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = `toast t-${type}`;
+  const icons = {
+    success:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`,
+    error:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+    info:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  };
+  t.innerHTML = (icons[type]||'') + `<span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.animation='slideOut .25s ease forwards'; setTimeout(()=>t.remove(),250); }, 3000);
+}
+
+// ─── REFRESH ALL ──────────────────────────────────────────────
+function refreshAll() {
+  updateMetrics();
+  renderDashboard();
+  renderRequests();
+  renderHistory();
+  renderSuspects();
+  renderOutlets();
+  document.getElementById('badge-outlet').textContent = outlets.length;
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+initDate();
+refreshAll();
+
+// drag & drop untuk photo dropzone (diinit setelah DOM ready)
+document.addEventListener('DOMContentLoaded', () => {
+  const dz = document.getElementById('photo-dropzone');
+  if (!dz) return;
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor='#1565C0'; dz.style.background='var(--primary-light)'; });
+  dz.addEventListener('dragleave', () => { dz.style.borderColor=''; dz.style.background=''; });
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.style.borderColor=''; dz.style.background='';
+    const dt = { files: e.dataTransfer.files };
+    handlePhotoSelect(dt);
+  });
+});
+
+// close export menus when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('.export-wrap')) {
+    document.querySelectorAll('.export-menu.open').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ─── EXPORT HELPERS ───────────────────────────────────────────
+function toggleExport(id) {
+  const menu = document.getElementById(id);
+  const wasOpen = menu.classList.contains('open');
+  document.querySelectorAll('.export-menu.open').forEach(m => m.classList.remove('open'));
+  if (!wasOpen) menu.classList.add('open');
+}
+
+function getExportData(type) {
+  if (type === 'requests') {
+    return requests.map(r => ({
+      'ID': r.id,
+      'Outlet': r.outlet,
+      'Jenis Request': r.lossType,
+      'Prioritas': r.priority,
+      'Nama & ID Member': r.reporter,
+      'Tanggal Kejadian': r.date,
+      'Waktu': r.time || '-',
+      'Lokasi': r.location || '-',
+      'Kronologi Lengkap': r.desc || '-',
+      'Suspect Terkait': r.suspect || '-',
+      'Status': r.status === 'open' ? 'Aktif' : r.status === 'done' ? 'Selesai' : 'Ditolak',
+      'Dibuat': formatDateTime(r.createdAt),
+      'Ditutup': r.closedAt ? formatDateTime(r.closedAt) : '-',
+    }));
+  }
+  if (type === 'history') {
+    return requests.filter(r => r.status !== 'open').map(r => ({
+      'ID': r.id,
+      'Outlet': r.outlet,
+      'Jenis Request': r.lossType,
+      'Prioritas': r.priority,
+      'Nama & ID Member': r.reporter,
+      'Tanggal Kejadian': r.date,
+      'Status': r.status === 'done' ? 'Selesai' : 'Ditolak',
+      'Dibuat': formatDateTime(r.createdAt),
+      'Ditutup': r.closedAt ? formatDateTime(r.closedAt) : '-',
+    }));
+  }
+  if (type === 'suspects') {
+    return suspects.map(s => ({
+      'ID': s.id,
+      'Nama Suspect': s.name,
+      'Outlet': s.outlet,
+      'Jenis Request': s.lossType,
+      'Status': s.status,
+      'Ciri Fisik': s.desc || '-',
+      'Catatan': s.notes || '-',
+      'Tercatat': formatDateTime(s.createdAt),
+    }));
+  }
+  return [];
+}
+
+const exportTitles = {
+  requests: 'Semua Request Kehilangan',
+  history: 'History Request',
+  suspects: 'Data Suspect',
+};
+
+function exportExcel(type) {
+  document.querySelectorAll('.export-menu.open').forEach(m => m.classList.remove('open'));
+  const data = getExportData(type);
+  if (!data.length) { showToast('Tidak ada data untuk diekspor.', 'error'); return; }
+
+  const ws = XLSX.utils.json_to_sheet(data);
+
+  // auto column width
+  const cols = Object.keys(data[0]).map(k => {
+    const maxLen = Math.max(k.length, ...data.map(r => String(r[k] || '').length));
+    return { wch: Math.min(maxLen + 2, 40) };
+  });
+  ws['!cols'] = cols;
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, exportTitles[type].slice(0, 31));
+
+  const now = new Date();
+  const stamp = now.toISOString().slice(0,10);
+  XLSX.writeFile(wb, `losttrack-${type}-${stamp}.xlsx`);
+  showToast(`Excel berhasil diunduh.`, 'success');
+}
+
+function exportPDF(type) {
+  document.querySelectorAll('.export-menu.open').forEach(m => m.classList.remove('open'));
+  const data = getExportData(type);
+  if (!data.length) { showToast('Tidak ada data untuk diekspor.', 'error'); return; }
+
+  const now = new Date();
+  const stamp = now.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+  const title = exportTitles[type];
+  const headers = Object.keys(data[0]);
+
+  const tableRows = data.map(row =>
+    `<tr>${headers.map(h => `<td>${row[h] ?? '-'}</td>`).join('')}</tr>`
+  ).join('');
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>${title}</title>
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 11px; color: #111; margin: 20px; }
+    h2 { font-size: 16px; margin-bottom: 4px; }
+    .meta { font-size: 11px; color: #666; margin-bottom: 16px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #1a1a1a; color: #fff; padding: 7px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+    td { padding: 7px 10px; border-bottom: 1px solid #e5e5e5; vertical-align: top; }
+    tr:nth-child(even) td { background: #f9f9f9; }
+    @media print { body { margin: 10mm; } }
+  </style></head><body>
+  <h2>Request CCTV — ${title}</h2>
+  <div class="meta">Diekspor pada ${stamp} &nbsp;|&nbsp; Total: ${data.length} data</div>
+  <table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+  <tbody>${tableRows}</tbody></table>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  showToast('Jendela cetak dibuka untuk PDF.', 'info');
+}
+
+// ─── GFORM SYNC ───────────────────────────────────────────────
+let gformScriptUrl = localStorage.getItem('gform_script_url') || '';
+let lastSyncTime = localStorage.getItem('gform_last_sync') || '';
+
+function openGFormConfig() {
+  document.getElementById('gform-url-input').value = gformScriptUrl;
+  document.getElementById('modal-gform').classList.add('open');
+}
+
+function saveGFormConfig() {
+  const url = document.getElementById('gform-url-input').value.trim();
+  if (!url) { showToast('URL Apps Script tidak boleh kosong.', 'error'); return; }
+  if (!url.startsWith('https://script.google.com/macros/s/')) {
+    showToast('URL tidak valid. Pastikan format: https://script.google.com/macros/s/...', 'error');
+    return;
+  }
+  gformScriptUrl = url;
+  localStorage.setItem('gform_script_url', url);
+  closeModal('modal-gform');
+  showToast('URL berhasil disimpan. Klik Sync GForm untuk mulai sinkronisasi.', 'success');
+}
+
+async function syncFromGForm() {
+  if (!gformScriptUrl) {
+    openGFormConfig();
+    showToast('Masukkan URL Apps Script terlebih dahulu.', 'info');
+    return;
+  }
+
+  // Animasi spinning
+  const icon = document.getElementById('sync-icon');
+  const btn = document.getElementById('sync-btn');
+  icon.style.animation = 'spin 1s linear infinite';
+  btn.disabled = true;
+  btn.style.opacity = '.7';
+
+  updateSyncStatus('Sedang menyinkronkan...', '#1565C0');
+
+  try {
+    const res = await fetch(`${gformScriptUrl}?action=getResponses&t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+
+    if (json.status !== 'ok') throw new Error(json.message || 'Respons tidak valid');
+
+    const rows = json.data || [];
+    let added = 0;
+
+    rows.forEach(row => {
+      const existingIds = requests.map(r => r.gformId);
+      if (row.id && existingIds.includes(row.id)) return; // skip duplikat
+
+      requests.unshift({
+        id: genReqId(),
+        gformId: row.id || '',
+        outlet:   row.outlet   || row.nama_outlet   || '—',
+        lossType: row.lossType || row.jenis_request || '—',
+        reporter: row.reporter || row.nama_pelapor   || '—',
+        priority: row.priority || row.prioritas      || 'Sedang',
+        date:     row.date     || row.tanggal        || new Date().toISOString().split('T')[0],
+        time:     row.time     || row.waktu          || '',
+        location: row.location || row.lokasi         || '',
+        desc:     row.desc     || row.deskripsi      || '',
+        suspect:  row.suspect  || row.nama_suspect   || '',
+        status:   'open',
+        createdAt: row.timestamp || new Date().toISOString(),
+        closedAt: null,
+        fromGForm: true,
+      });
+      added++;
+    });
+
+    lastSyncTime = new Date().toLocaleString('id-ID');
+    localStorage.setItem('gform_last_sync', lastSyncTime);
+    refreshAll();
+
+    updateSyncStatus(`Tersinkronisasi • ${lastSyncTime} • +${added} data baru`, '#2e7d32');
+    showToast(added > 0 ? `${added} request baru dari Google Form.` : 'Tidak ada data baru dari Google Form.', added > 0 ? 'success' : 'info');
+
+  } catch (err) {
+    console.error('Sync error:', err);
+    updateSyncStatus(`Gagal sync: ${err.message}`, '#c62828');
+    showToast(`Gagal sinkronisasi: ${err.message}`, 'error');
+  } finally {
+    icon.style.animation = '';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
+}
+
+function updateSyncStatus(text, color) {
+  const bar = document.getElementById('sync-status-bar');
+  const txt = document.getElementById('sync-status-text');
+  bar.style.display = 'flex';
+  txt.textContent = text;
+  txt.style.color = color || 'var(--text3)';
+}
+
+// Init sync status jika ada riwayat
+if (lastSyncTime) updateSyncStatus(`Terakhir sync: ${lastSyncTime}`, null);
+</script>
+
+<!-- MODAL: GFORM CONFIG -->
+<div class="overlay" id="modal-gform">
+  <div class="modal" style="width:520px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Pengaturan Sinkronisasi Google Form</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:3px;">Hubungkan dashboard dengan Google Form via Apps Script</div>
+      </div>
+      <button class="btn-icon" onclick="closeModal('modal-gform')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div style="background:var(--primary-light);border:1.5px solid var(--border2);border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;">
+        <div style="font-size:12px;font-weight:700;color:#1565C0;margin-bottom:8px;display:flex;align-items:center;gap:7px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Cara menghubungkan
+        </div>
+        <ol style="font-size:12px;color:var(--text2);line-height:1.9;padding-left:16px;">
+          <li>Buka Google Form Anda → klik ikon <strong>Sheets</strong> untuk membuat spreadsheet response</li>
+          <li>Di Spreadsheet, buka <strong>Extensions → Apps Script</strong></li>
+          <li>Hapus kode default, paste kode dari file <code style="background:var(--surface3);padding:1px 5px;border-radius:3px;font-size:11px;">apps-script.gs</code> yang sudah diunduh</li>
+          <li>Klik <strong>Deploy → New deployment → Web App</strong></li>
+          <li>Set <em>Execute as</em>: <strong>Me</strong> dan <em>Who has access</em>: <strong>Anyone</strong></li>
+          <li>Klik <strong>Deploy</strong>, copy URL yang muncul</li>
+          <li>Paste URL di bawah ini</li>
+        </ol>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">URL Apps Script Web App <span class="required">*</span></label>
+        <input class="form-input" id="gform-url-input" type="text" placeholder="https://script.google.com/macros/s/AKfycby.../exec">
+        <div class="form-hint" style="margin-top:6px;">Contoh: https://script.google.com/macros/s/AKfycby.../exec</div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-gform')">Batal</button>
+      <button class="btn btn-primary" onclick="saveGFormConfig()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Simpan & Aktifkan
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: GDRIVE LINK (Selesai) -->
+<div class="overlay" id="modal-gdrive">
+  <div class="modal" style="width:460px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Tandai Request Selesai</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:3px;" id="gdrive-req-label"></div>
+      </div>
+      <button class="btn-icon" onclick="closeModal('modal-gdrive')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="gdrive-req-id">
+
+      <div style="background:var(--green-light);border:1.5px solid var(--green-border);border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span style="font-size:13px;font-weight:600;color:var(--green);">Request akan ditandai selesai.</span>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>Link Google Drive</span>
+          <span style="font-size:10px;font-weight:500;color:var(--text3);background:var(--surface3);padding:2px 8px;border-radius:99px;border:1px solid var(--border);">Opsional</span>
+        </label>
+        <div style="position:relative;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <input class="form-input" id="gdrive-link-input" type="url" placeholder="https://drive.google.com/..." style="padding-left:36px;" onkeydown="if(event.key==='Enter')confirmMarkDone()">
+        </div>
+        <div class="form-hint" style="margin-top:6px;">Tempel link folder atau file bukti dari Google Drive. Kosongkan jika tidak ada.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-gdrive')">Batal</button>
+      <button class="btn btn-success" onclick="confirmMarkDone()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Konfirmasi Selesai
+      </button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
